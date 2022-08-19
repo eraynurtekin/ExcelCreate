@@ -46,12 +46,7 @@ namespace ExcelDeneme.Controllers
             return View();
         }
 
-
-
-
-
         #region CompleteWorksheet
-
 
         // ******************************************************************************
         // ******************************************************************************
@@ -63,8 +58,7 @@ namespace ExcelDeneme.Controllers
             IActionResult rslt = new BadRequestResult();
 
             string WorksheetName = "CompleteWorksheet";
-
-
+           
             // create a new memory stream;
             MemoryStream ms = new MemoryStream();
 
@@ -88,7 +82,7 @@ namespace ExcelDeneme.Controllers
 
             // add a new worksheet to the worksheet part.  Note the initialization 
             // of SheetData to the worksheet contructor
-            // worksheetPart.Worksheet = new Worksheet(new SheetData());
+            //worksheetPart.Worksheet = new Worksheet(new SheetData());
             worksheetPart.Worksheet = new Worksheet();
 
 
@@ -100,7 +94,7 @@ namespace ExcelDeneme.Controllers
             // create the stylesheet and assign it to the stylepart.stylesheet property
             stylePart.Stylesheet = CreateStyleSheet();
 
-            // save stylesheet to style part
+            //// save stylesheet to style part
             stylePart.Stylesheet.Save();
 
 
@@ -174,7 +168,7 @@ namespace ExcelDeneme.Controllers
             //// now, create each data row by appending it to sheetdata
             for (int i = 0; i < dataItems.Count; i++)
             {
-                 // new data row
+                // new data row
                 rw = new Row();
 
                 // append the row
@@ -204,11 +198,11 @@ namespace ExcelDeneme.Controllers
             // now we need to set the row index of the row for 
             // cell reference and formula purposes
             rw.RowIndex = UInt32Value.FromUInt32((UInt32)sheetData.ChildElements.Count);
-            
+
 
             // create the total row.  We know the begin row is 1 because the header is at 0.  We know the 
             // we could track the beginning row easily enough but for 
-            //CreateFooterRow(BeginningDataRow, dataItems.Count, rw);
+            CreateFooterRow(BeginningDataRow, dataItems.Count, rw);
 
 
             // ------------------------------- END BUILDING THE DATA CELLS -----------------------
@@ -261,68 +255,43 @@ namespace ExcelDeneme.Controllers
 
             // invoice number column
             Column col = new Column();
-            col.Width = DoubleValue.FromDouble(16.0);
-            col.Min = UInt32Value.FromUInt32((UInt32)1);
-            col.Max = col.Min;
-            col.CustomWidth = BooleanValue.FromBoolean(true);
             workSheetColumns.Append(col);
 
             // date column
             col = new Column();
-            col.Width = DoubleValue.FromDouble(25.0);
-            col.Min = UInt32Value.FromUInt32((UInt32)2);
-            col.Max = col.Min;
-            col.CustomWidth = BooleanValue.FromBoolean(true);
+
             workSheetColumns.Append(col);
 
 
             // first name column
             col = new Column();
-            col.Width = DoubleValue.FromDouble(20);
-            col.Min = UInt32Value.FromUInt32((UInt32)3);
-            col.Max = col.Min;
-            col.CustomWidth = BooleanValue.FromBoolean(true);
+
             workSheetColumns.Append(col);
 
             // last name column
             col = new Column();
-            col.Width = DoubleValue.FromDouble(20.0);
-            col.Min = UInt32Value.FromUInt32((UInt32)4);
-            col.Max = col.Min;
-            col.CustomWidth = BooleanValue.FromBoolean(true);
+
             workSheetColumns.Append(col);
 
             // will pickup column
             col = new Column();
-            col.Width = DoubleValue.FromDouble(15.0);
-            col.Min = UInt32Value.FromUInt32((UInt32)5);
-            col.Max = col.Min;
-            col.CustomWidth = BooleanValue.FromBoolean(true);
+
             workSheetColumns.Append(col);
 
 
             // qty column
             col = new Column();
-            col.Width = DoubleValue.FromDouble(15.0);
-            col.Min = UInt32Value.FromUInt32((UInt32)6);
-            col.Max = col.Min;
-            col.CustomWidth = BooleanValue.FromBoolean(true);
+
             workSheetColumns.Append(col);
 
             // unit price column
             col = new Column();
-            col.Width = DoubleValue.FromDouble(15.0);
-            col.Min = UInt32Value.FromUInt32((UInt32)7);
-            col.Max = col.Min;
-            col.CustomWidth = BooleanValue.FromBoolean(true);
+
             workSheetColumns.Append(col);
 
             // subtotal column
             col = new Column();
-            col.Width = DoubleValue.FromDouble(15.0);
-            col.Min = UInt32Value.FromUInt32((UInt32)8);
-            col.Max = col.Min;
-            col.CustomWidth = BooleanValue.FromBoolean(true);
+
             workSheetColumns.Append(col);
 
             return workSheetColumns;
@@ -333,17 +302,7 @@ namespace ExcelDeneme.Controllers
 
         #region CreateWorksheetStyleSheet
 
-        // ******************************************************************************
-        // ******************************************************************************
-        // CreateWorksheetStylesheet creates the stylesheet for the worksheet 
-        //
-        // When creating a stylesheet, the idea is to: 
-        // First, Define all the number formats, fonts, fills, and borders as separate entities.
-        // Then, pick a number format, a font, a fill, and a border and create a cell format.  
-        // Repeat this for as many cell formats as required in the worksheet. It can be 
-        // any amount.
-        // ******************************************************************************
-        // ******************************************************************************
+
         private Stylesheet CreateStyleSheet()
         {
             // values to easily keep track of entities so when be 
@@ -700,7 +659,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue("INVOICE#");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)HEADER_CELLSTYLE_LEFT_JUSTIFIED);
-            c.CellReference = "A" + rw.RowIndex.Value.ToString();
+            c.CellReference = "B" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             DateTime cNow = DateTime.Now;
@@ -708,14 +667,14 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue("DATE");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)HEADER_CELLSTYLE_LEFT_JUSTIFIED);
-            c.CellReference = "B" + rw.RowIndex.Value.ToString();
+            c.CellReference = "C" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             c = new Cell();
             c.CellValue = new CellValue("FIRST");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)HEADER_CELLSTYLE_LEFT_JUSTIFIED);
-            c.CellReference = "C" + rw.RowIndex.Value.ToString();
+            c.CellReference = "D" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             // last
@@ -723,7 +682,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue("LAST");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)HEADER_CELLSTYLE_LEFT_JUSTIFIED);
-            c.CellReference = "D" + rw.RowIndex.Value.ToString();
+            c.CellReference = "E" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             // will pickup
@@ -731,7 +690,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue("WILL PICKUP");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)HEADER_CELLSTYLE_LEFT_JUSTIFIED);
-            c.CellReference = "E" + rw.RowIndex.Value.ToString();
+            c.CellReference = "F" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             // qty header
@@ -739,21 +698,21 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue("QTY");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)HEADER_CELLSTYLE_RIGHT_JUSTIFIED);
-            c.CellReference = "F" + rw.RowIndex.Value.ToString();
+            c.CellReference = "G" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             c = new Cell();
             c.CellValue = new CellValue("UNITPRICE");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)HEADER_CELLSTYLE_RIGHT_JUSTIFIED);
-            c.CellReference = "G" + rw.RowIndex.Value.ToString();
+            c.CellReference = "H" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             c = new Cell();
             c.CellValue = new CellValue("SUBTOTAL");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)HEADER_CELLSTYLE_RIGHT_JUSTIFIED);
-            c.CellReference = "H" + rw.RowIndex.Value.ToString();
+            c.CellReference = "I" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             return;
@@ -778,7 +737,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue(itm.InvoiceNumber.ToString());
             c.DataType = CellValues.Number;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)DATA_CELLSTYLE_INVOICE_NUMBER);
-            c.CellReference = "A" + rw.RowIndex.Value.ToString();
+            c.CellReference = "B" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             // invoice date.  (B)
@@ -786,7 +745,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue(itm.InvoiceDate);
             c.DataType = CellValues.Date;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)DATA_CELLSTYLE_DATE);
-            c.CellReference = "B" + rw.RowIndex.Value.ToString();
+            c.CellReference = "C" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             // first name (C)
@@ -794,7 +753,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue(itm.First);
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)DATA_CELLSTYLE_TEXT);
-            c.CellReference = "C" + rw.RowIndex.Value.ToString();
+            c.CellReference = "D" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
 
@@ -803,7 +762,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue(itm.Last);
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)DATA_CELLSTYLE_TEXT);
-            c.CellReference = "D" + rw.RowIndex.Value.ToString();
+            c.CellReference = "E" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
             // will pickup (E).  
@@ -815,7 +774,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue(convertedBooleanValue.ToString());
             c.DataType = CellValues.Boolean;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)DATA_CELLSTYLE_WILL_PICKUP);
-            c.CellReference = "E" + rw.RowIndex.Value.ToString();
+            c.CellReference = "F" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
 
@@ -824,7 +783,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue(itm.Qty.ToString());
             c.DataType = CellValues.Number;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)DATA_CELLSTYLE_QTY);
-            c.CellReference = "F" + rw.RowIndex.Value.ToString();
+            c.CellReference = "G" + rw.RowIndex.Value.ToString();
             rw.Append(c);
             Cell QtyCell = c;
 
@@ -835,7 +794,7 @@ namespace ExcelDeneme.Controllers
             c.CellValue = new CellValue(itm.UnitPrice.ToString());
             c.DataType = CellValues.Number;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)DATA_CELLSTYLE_CURRENCY);
-            c.CellReference = "G" + rw.RowIndex.Value.ToString();
+            c.CellReference = "H" + rw.RowIndex.Value.ToString();
             rw.Append(c);
             Cell UnitPriceCell = c;
 
@@ -852,7 +811,7 @@ namespace ExcelDeneme.Controllers
             c.CellFormula = cellFormula;
             c.DataType = CellValues.Number;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)DATA_CELLSTYLE_CURRENCY);
-            c.CellReference = "H" + rw.RowIndex.Value.ToString();
+            c.CellReference = "I" + rw.RowIndex.Value.ToString();
             rw.Append(c);
 
         }
@@ -873,7 +832,7 @@ namespace ExcelDeneme.Controllers
         {
 
             // invoice number (A)
-             Cell c = new Cell();
+            Cell c = new Cell();
             c.CellValue = new CellValue("");
             c.DataType = CellValues.String;
             c.StyleIndex = UInt32Value.FromUInt32((UInt32)CELLSTYLE_DEFAULT);
@@ -1040,8 +999,6 @@ namespace ExcelDeneme.Controllers
 
 
         #endregion
-
-
 
 
 
